@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+
+  spring-app:
+    image: urbcrowd-services:latest
+    container_name: urbcrowd-services
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/urbcrowd
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
