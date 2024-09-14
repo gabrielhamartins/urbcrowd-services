@@ -1,9 +1,14 @@
-FROM openjdk:21
+FROM maven:latest AS build
 
 WORKDIR /app
+ADD . /app
 
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} urbcrowd.jar
+RUN mvn package -DskipTests
+
+FROM eclipse-temurin:latest
+
+WORKDIR /app
+COPY --from=build /app/target/*.jar urbcrowd.jar
 
 EXPOSE 8080
 
