@@ -9,7 +9,7 @@ services:
     networks:
       - app-network
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_data:/data/db2
 
   spring-app:
     image: urbcrowd-services:latest
