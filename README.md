@@ -1,33 +1,37 @@
 # Urbcrowd Services
 
-## Purpose
+## Propósito
 
-Purpose
+Backend do Urbcrowd, um aplicativo para população registrar reclamações com o intuito de dar mais visibilidade aos problemas da cidade que reside.
 
-## What's inside
+## Tecnologias
 
-What's inside
-
-## Plugins
-
-Plugins
+Java, Maven, Spring Boot, Docker, Git
 
 ## Setup
 
-Setup
+docker
+
+OU
+
+Java latest, Maven latest, Mongodb latest
 
 ## Building and deploying the application
 
-### Building the application
-
-
+### Build & run the application with docker
 
 ```bash
-
+docker compose up --build
 ```
 
-### Running the application
+### Building the application without docker
 
 ```bash
+mvn clean install
+```
 
+### Running the application (Requires mongodb running)
+
+```bash
+java -jar urbcrowd-services-x.x.x.jar
 ```
