@@ -1,0 +1,27 @@
+meta {
+  name: post-complaints
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/complaints
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "address": {
+      "addressLine": "Avenida Um",
+      "city": "Campinas",
+      "federalState": "São Paulo"
+    },
+    "geolocation": {},
+    "description": "Buraco na rua"
+  }
+}

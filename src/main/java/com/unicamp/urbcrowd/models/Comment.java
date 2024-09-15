@@ -18,7 +18,8 @@ public class Comment {
     private String userId;
     private String userName;
     private String text;
-    private Integer thumbsUpCount;
+    @Builder.Default
+    private Integer thumbsUpCount = 0;
 
     public void thumbsUp(){
         this.thumbsUpCount++;

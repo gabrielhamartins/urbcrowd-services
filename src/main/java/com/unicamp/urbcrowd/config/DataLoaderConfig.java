@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
@@ -39,6 +40,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                 .email("urbcrowd@urbcrowd.com")
                 .name("Urbcrowd Services")
                 .username("urbcrowd")
+                .createdDate(LocalDateTime.now())
                 .roles(Set.of(Role.builder().name(Role.Values.ADMIN.toString()).build()))
                 .password(bCryptPasswordEncoder.encode("urbcrowd")).build());
 

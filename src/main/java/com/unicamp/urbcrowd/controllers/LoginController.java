@@ -2,6 +2,7 @@ package com.unicamp.urbcrowd.controllers;
 
 import com.unicamp.urbcrowd.controllers.dto.LoginRequestDTO;
 import com.unicamp.urbcrowd.controllers.dto.LoginResponseDTO;
+import com.unicamp.urbcrowd.models.Role;
 import com.unicamp.urbcrowd.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @RestController
 public class LoginController {
@@ -36,12 +38,16 @@ public class LoginController {
             throw new BadCredentialsException("Username or password is invalid.");
 
         var expiresIn = 3600L;
+        var roles = user.get().getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.joining());
 
         var claims = JwtClaimsSet.builder()
                 .issuer("urbcrowd")
                 .subject(user.get().getId())
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(expiresIn))
+                .claim("scope", roles)
                 .build();
 
         return ResponseEntity.ok(new LoginResponseDTO(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expiresIn));

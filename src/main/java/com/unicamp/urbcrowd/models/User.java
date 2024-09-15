@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -26,6 +28,8 @@ public class User {
     private String username;
     private String email;
     private String password;
+    @CreatedDate
+    private LocalDateTime createdDate;
     private Set<Role> roles;
 
     public boolean passwordMatches(LoginRequestDTO loginRequestDTO, PasswordEncoder passwordEncoder){

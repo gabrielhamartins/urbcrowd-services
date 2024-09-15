@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Urbcrowd-Services",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
