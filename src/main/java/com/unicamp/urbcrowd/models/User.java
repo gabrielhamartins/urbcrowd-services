@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -26,8 +27,10 @@ public class User {
     private String id;
     private String name;
     private String username;
+    @Indexed
     private String email;
     private String password;
+    private String picture;
     @CreatedDate
     private LocalDateTime createdDate;
     private Set<Role> roles;

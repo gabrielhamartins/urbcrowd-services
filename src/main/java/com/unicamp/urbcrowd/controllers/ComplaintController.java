@@ -1,11 +1,12 @@
 package com.unicamp.urbcrowd.controllers;
 
-import com.unicamp.urbcrowd.controllers.dto.ComplaintDTO;
+import com.unicamp.urbcrowd.controllers.dto.ComplaintRequestDTO;
 import com.unicamp.urbcrowd.models.Complaint;
 import com.unicamp.urbcrowd.repositories.ComplaintRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +24,14 @@ public class ComplaintController {
     }
 
     @PostMapping("/complaints")
-    public ResponseEntity<String> create(@RequestBody ComplaintDTO complaintDTO, JwtAuthenticationToken token){
-
+    public ResponseEntity<String> create(@RequestBody ComplaintRequestDTO complaintRequestDTO, Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
         Complaint savedComplaint = this.complaintRepository.save(Complaint.builder()
-                .address(complaintDTO.address())
-                .geolocation(complaintDTO.geolocation())
-                .description(complaintDTO.description())
-                .userId(token.getName()).build());
+                .address(complaintRequestDTO.address())
+                .geolocation(complaintRequestDTO.geolocation())
+                .description(complaintRequestDTO.description())
+                .userEmail(jwt.getClaim("email"))
+                .build());
 
         return new ResponseEntity<>(savedComplaint.getId(), HttpStatus.CREATED);
     }

@@ -23,7 +23,7 @@ public class Complaint {
     @Id
     private String id;
     @Indexed
-    private String userId;
+    private String userEmail;
     private Address address;
     private Geolocation geolocation;
     private String imageHref;

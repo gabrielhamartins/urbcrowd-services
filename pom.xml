@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.unicamp</groupId>
 	<artifactId>urbcrowd</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<name>urbcrowd</name>
 	<description>Urbcrowd project for MC855 class</description>
 	<url/>

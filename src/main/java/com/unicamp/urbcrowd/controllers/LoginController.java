@@ -48,6 +48,8 @@ public class LoginController {
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(expiresIn))
                 .claim("scope", roles)
+                .claim("given_name", user.get().getName())
+                .claim("email", user.get().getEmail())
                 .build();
 
         return ResponseEntity.ok(new LoginResponseDTO(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expiresIn));
