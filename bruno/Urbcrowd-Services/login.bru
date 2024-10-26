@@ -12,11 +12,15 @@ post {
 
 body:json {
   {
-    "username": "urbcrowd",
-    "password": "urbcrowd"
+    "username": "gabriel",
+    "password": "gabriel"
   }
 }
 
 vars:post-response {
   accessToken: res.body.accessToken
+}
+
+script:post-response {
+  bru.setVar("accessToken",res.body.accessToken)
 }

@@ -105,7 +105,7 @@ public class SecurityConfig {
 
         JwtAuthenticationProvider internalProvider = new JwtAuthenticationProvider(jwtDecoder());
         internalProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
-        authenticationManagers.put("your-internal-issuer", internalProvider::authenticate);
+        authenticationManagers.put("urbcrowd", internalProvider::authenticate);
 
         JwtAuthenticationProvider googleProvider = new JwtAuthenticationProvider(googleJwtDecoder());
         googleProvider.setJwtAuthenticationConverter(customJwtAuthenticationConverter());
