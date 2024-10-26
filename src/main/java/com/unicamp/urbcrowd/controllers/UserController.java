@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -66,22 +67,12 @@ public class UserController {
     }
 
     @GetMapping("/user-info")
-    public ResponseEntity<UserInfoResponseDTO> getUserInfo(Authentication authentication) {
+    public ResponseEntity<UserInfoResponseDTO> getUserInfo(Authentication authentication) throws AccountNotFoundException {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaim("email");
         Optional<User> userOptional = this.userRepository.findByEmail(email);
         if(userOptional.isEmpty()){
-            var role = roleRepository.findByName(Role.Values.DEFAULT.name());
-            User user = User.builder()
-                    .name(jwt.getClaim("given_name"))
-                    .username(email.substring(0, email.indexOf("@")))
-                    .email(email)
-                    .roles(Set.of(role))
-                    .picture(jwt.getClaim("picture"))
-                    .password(bCryptPasswordEncoder.encode(jwt.getClaim("sub")))
-                    .build();
-            userRepository.save(user);
-            return ResponseEntity.ok(userToUserInfoDTO(user));
+            throw new AccountNotFoundException("User not found in database.");
         }
         return ResponseEntity.ok(userToUserInfoDTO(userOptional.get()));
     }

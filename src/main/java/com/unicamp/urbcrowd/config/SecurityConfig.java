@@ -4,14 +4,13 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import jakarta.servlet.http.HttpServletRequest;
+import com.unicamp.urbcrowd.repositories.RoleRepository;
+import com.unicamp.urbcrowd.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,6 +41,15 @@ public class SecurityConfig {
     @Value("${jwt.public.key}")
     private RSAPublicKey jwtPublicKey;
 
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    public SecurityConfig(UserRepository userRepository,
+                          RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -68,20 +76,47 @@ public class SecurityConfig {
         return jwtDecoder;
     }
 
+    //@Bean
+    //public JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
+    //    Map<String, JwtDecoder> jwtDecoders = new HashMap<>();
+    //    jwtDecoders.put("urbcrowd", jwtDecoder());
+    //    jwtDecoders.put("https://accounts.google.com", googleJwtDecoder());
+//
+    //    return new JwtIssuerAuthenticationManagerResolver((issuer) -> {
+    //        JwtDecoder jwtDecoder = jwtDecoders.get(issuer);
+    //        if (jwtDecoder != null) {
+    //            JwtAuthenticationProvider authenticationProvider = new JwtAuthenticationProvider(jwtDecoder);
+    //            authenticationProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
+    //            return authenticationProvider::authenticate;
+    //        }
+    //        throw new JwtException("Unknown issuer: " + issuer);
+    //    });
+    //}
+
+    @Bean
+    public CustomJwtAuthenticationConverter customJwtAuthenticationConverter() {
+        return new CustomJwtAuthenticationConverter(userRepository,
+                roleRepository);
+    }
+
     @Bean
     public JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
-        Map<String, JwtDecoder> jwtDecoders = new HashMap<>();
-        jwtDecoders.put("urbcrowd", jwtDecoder());
-        jwtDecoders.put("https://accounts.google.com", googleJwtDecoder());
+        Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
+
+        JwtAuthenticationProvider internalProvider = new JwtAuthenticationProvider(jwtDecoder());
+        internalProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
+        authenticationManagers.put("your-internal-issuer", internalProvider::authenticate);
+
+        JwtAuthenticationProvider googleProvider = new JwtAuthenticationProvider(googleJwtDecoder());
+        googleProvider.setJwtAuthenticationConverter(customJwtAuthenticationConverter());
+        authenticationManagers.put("https://accounts.google.com", googleProvider::authenticate);
 
         return new JwtIssuerAuthenticationManagerResolver((issuer) -> {
-            JwtDecoder jwtDecoder = jwtDecoders.get(issuer);
-            if (jwtDecoder != null) {
-                JwtAuthenticationProvider authenticationProvider = new JwtAuthenticationProvider(jwtDecoder);
-                authenticationProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
-                return authenticationProvider::authenticate;
+            AuthenticationManager authenticationManager = authenticationManagers.get(issuer);
+            if (authenticationManager == null) {
+                throw new JwtException("Unknown issuer: " + issuer);
             }
-            throw new JwtException("Unknown issuer: " + issuer);
+            return authenticationManager;
         });
     }
 
