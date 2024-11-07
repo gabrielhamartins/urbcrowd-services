@@ -5,5 +5,5 @@ public record UserInfoResponseDTO(
         String username,
         String email,
         String pictureHref
-){
+) {
 }

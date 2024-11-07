@@ -35,7 +35,7 @@ public class User {
     private LocalDateTime createdDate;
     private Set<Role> roles;
 
-    public boolean passwordMatches(LoginRequestDTO loginRequestDTO, PasswordEncoder passwordEncoder){
+    public boolean passwordMatches(LoginRequestDTO loginRequestDTO, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequestDTO.password(), this.password);
     }
 }

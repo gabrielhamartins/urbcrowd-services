@@ -1,7 +1,7 @@
 package com.unicamp.urbcrowd.controllers.dto;
 
-public record LoginResponseDTO (
+public record LoginResponseDTO(
         String accessToken,
         Long expiresIn
-){
+) {
 }

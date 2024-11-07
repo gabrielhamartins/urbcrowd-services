@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.unicamp.urbcrowd.repositories.RoleRepository;
 import com.unicamp.urbcrowd.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,14 +36,16 @@ import java.util.Map;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${jwt.private.key}")
-    private RSAPrivateKey jwtPrivateKey;
-
-    @Value("${jwt.public.key}")
-    private RSAPublicKey jwtPublicKey;
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    @Value("${jwt.private.key}")
+    private RSAPrivateKey jwtPrivateKey;
+    @Value("${jwt.public.key}")
+    private RSAPublicKey jwtPublicKey;
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     public SecurityConfig(UserRepository userRepository,
                           RoleRepository roleRepository) {
@@ -54,12 +57,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST, "/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .authenticationManagerResolver(authenticationManagerResolver()))
+                        .authenticationManagerResolver(authenticationManagerResolver())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
@@ -75,23 +83,6 @@ public class SecurityConfig {
         jwtDecoder.setJwtValidator(jwtValidator);
         return jwtDecoder;
     }
-
-    //@Bean
-    //public JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
-    //    Map<String, JwtDecoder> jwtDecoders = new HashMap<>();
-    //    jwtDecoders.put("urbcrowd", jwtDecoder());
-    //    jwtDecoders.put("https://accounts.google.com", googleJwtDecoder());
-//
-    //    return new JwtIssuerAuthenticationManagerResolver((issuer) -> {
-    //        JwtDecoder jwtDecoder = jwtDecoders.get(issuer);
-    //        if (jwtDecoder != null) {
-    //            JwtAuthenticationProvider authenticationProvider = new JwtAuthenticationProvider(jwtDecoder);
-    //            authenticationProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
-    //            return authenticationProvider::authenticate;
-    //        }
-    //        throw new JwtException("Unknown issuer: " + issuer);
-    //    });
-    //}
 
     @Bean
     public CustomJwtAuthenticationConverter customJwtAuthenticationConverter() {
@@ -131,19 +122,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(){
+    public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(this.jwtPublicKey).privateKey(this.jwtPrivateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(){
+    public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.jwtPublicKey).build();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

@@ -32,9 +32,9 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         var user = userRepository.findByUsername(loginRequestDTO.username());
-        if(user.isEmpty() || !user.get().passwordMatches(loginRequestDTO, bCryptPasswordEncoder))
+        if (user.isEmpty() || !user.get().passwordMatches(loginRequestDTO, bCryptPasswordEncoder))
             throw new BadCredentialsException("Username or password is invalid.");
 
         var expiresIn = 3600L;

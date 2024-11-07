@@ -5,7 +5,7 @@ import com.unicamp.urbcrowd.models.User;
 
 public class UserInfoMapper {
 
-    public static UserInfoResponseDTO userToUserInfoDTO(User user){
+    public static UserInfoResponseDTO userToUserInfoDTO(User user) {
         return new UserInfoResponseDTO(
                 user.getName(),
                 user.getUsername(),

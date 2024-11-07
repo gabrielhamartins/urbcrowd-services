@@ -18,13 +18,13 @@ public class Role {
     private long id;
     private String name;
 
-    public enum Values{
+    public enum Values {
         ADMIN(1L),
         DEFAULT(2L);
 
         final long roleId;
 
-        Values(long roleId){
+        Values(long roleId) {
             this.roleId = roleId;
         }
     }

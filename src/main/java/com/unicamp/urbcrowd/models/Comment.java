@@ -21,7 +21,7 @@ public class Comment {
     @Builder.Default
     private Integer thumbsUpCount = 0;
 
-    public void thumbsUp(){
+    public void thumbsUp() {
         this.thumbsUpCount++;
     }
 }

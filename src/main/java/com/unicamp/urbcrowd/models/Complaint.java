@@ -36,7 +36,7 @@ public class Complaint {
     @Builder.Default
     private Integer thumbsUpCount = 0;
 
-    private void thumbsUp(){
+    private void thumbsUp() {
         this.thumbsUpCount++;
     }
 

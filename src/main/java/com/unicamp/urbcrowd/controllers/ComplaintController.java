@@ -37,7 +37,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/complaints")
-    public ResponseEntity<List<Complaint>> findAll(){
+    public ResponseEntity<List<Complaint>> findAll() {
         return ResponseEntity.ok(this.complaintRepository.findAll());
     }
 }

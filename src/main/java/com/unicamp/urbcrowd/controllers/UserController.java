@@ -2,6 +2,7 @@ package com.unicamp.urbcrowd.controllers;
 
 import com.unicamp.urbcrowd.controllers.dto.CreateUserRequestDTO;
 import com.unicamp.urbcrowd.controllers.dto.UserInfoResponseDTO;
+import com.unicamp.urbcrowd.exceptions.BusinessException;
 import com.unicamp.urbcrowd.models.Role;
 import com.unicamp.urbcrowd.models.User;
 import com.unicamp.urbcrowd.repositories.RoleRepository;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
@@ -44,8 +44,8 @@ public class UserController {
     @Transactional
     public ResponseEntity<String> create(@RequestBody CreateUserRequestDTO createUserRequestDTO) throws BadRequestException {
 
-        if(this.userRepository.findByUsernameOrEmail(createUserRequestDTO.username(), createUserRequestDTO.email()).isPresent())
-            throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Username or email already exists.");
+        if (this.userRepository.findByUsernameOrEmail(createUserRequestDTO.username(), createUserRequestDTO.email()).isPresent())
+            throw new BusinessException(HttpStatus.PRECONDITION_FAILED, "Username or email already exists.");
 
         var role = roleRepository.findByName(Role.Values.DEFAULT.name());
 
@@ -61,7 +61,7 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() {
 
         return ResponseEntity.ok(this.userRepository.findAll());
     }
@@ -71,7 +71,7 @@ public class UserController {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String email = jwt.getClaim("email");
         Optional<User> userOptional = this.userRepository.findByEmail(email);
-        if(userOptional.isEmpty()){
+        if (userOptional.isEmpty()) {
             throw new AccountNotFoundException("User not found in database.");
         }
         return ResponseEntity.ok(userToUserInfoDTO(userOptional.get()));

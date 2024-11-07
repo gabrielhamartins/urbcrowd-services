@@ -7,5 +7,5 @@ public record ComplaintRequestDTO(
         Address address,
         Geolocation geolocation,
         String description
-){
+) {
 }

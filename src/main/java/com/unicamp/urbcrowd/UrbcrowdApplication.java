@@ -10,8 +10,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoAuditing
 public class UrbcrowdApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(UrbcrowdApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UrbcrowdApplication.class, args);
+    }
 
 }
