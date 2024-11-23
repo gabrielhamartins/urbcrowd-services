@@ -7,6 +7,7 @@ public class UserInfoMapper {
 
     public static UserInfoResponseDTO userToUserInfoDTO(User user) {
         return new UserInfoResponseDTO(
+                user.getId(),
                 user.getName(),
                 user.getUsername(),
                 user.getEmail(),

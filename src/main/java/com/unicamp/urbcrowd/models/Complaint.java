@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -34,10 +35,12 @@ public class Complaint {
     private String description;
     private Set<Comment> comments;
     @Builder.Default
-    private Integer thumbsUpCount = 0;
-
-    private void thumbsUp() {
-        this.thumbsUpCount++;
+    private Set<String> thumbsUpUserIds = new HashSet<>();
+    @Builder.Default
+    private ComplaintStatus status = ComplaintStatus.OPEN;
+    private ComplaintType type;
+    public void thumbsUp(String userId) {
+        this.thumbsUpUserIds.add(userId);
     }
 
 }
