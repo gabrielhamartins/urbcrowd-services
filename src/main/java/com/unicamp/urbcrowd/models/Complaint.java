@@ -25,6 +25,7 @@ public class Complaint {
     private String id;
     @Indexed
     private String userEmail;
+    private String title;
     private Address address;
     private Geolocation geolocation;
     private String imageHref;

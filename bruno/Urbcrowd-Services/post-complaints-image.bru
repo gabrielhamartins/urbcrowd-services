@@ -1,11 +1,11 @@
 meta {
-  name: post-complaints
+  name: post-complaints-image
   type: http
-  seq: 4
+  seq: 9
 }
 
 post {
-  url: {{host}}/complaints
+  url: {{host}}/complaints-image
   body: multipartForm
   auth: bearer
 }
@@ -27,5 +27,12 @@ body:json {
 }
 
 body:multipart-form {
-  teste: @file(C:\Users\gabri\Pictures\eu2.png)
+  image: @file(C:\Users\gabri\Pictures\inception.png)
+  address.addressLine: Rua um
+  address.city: Campinas
+  address.federalState: SP
+  geolocation.latitude: 12.3
+  geolocation.longitude: 32.1
+  type: TRASH
+  description: Lixo na rua um
 }

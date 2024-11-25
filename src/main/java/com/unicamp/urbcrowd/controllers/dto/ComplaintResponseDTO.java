@@ -7,6 +7,7 @@ import java.util.Set;
 
 public record ComplaintResponseDTO(
         String id,
+        String title,
         String userEmail,
         Address address,
         Geolocation geolocation,

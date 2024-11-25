@@ -5,6 +5,7 @@ import com.unicamp.urbcrowd.models.ComplaintType;
 import com.unicamp.urbcrowd.models.Geolocation;
 
 public record ComplaintRequestDTO(
+        String title,
         Address address,
         Geolocation geolocation,
         ComplaintType type,

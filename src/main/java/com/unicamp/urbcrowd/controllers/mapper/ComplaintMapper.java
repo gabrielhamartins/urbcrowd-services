@@ -8,6 +8,7 @@ public class ComplaintMapper {
     public static ComplaintResponseDTO complaintToComplaintResponseDTO(Complaint complaint){
         return new ComplaintResponseDTO(
                 complaint.getId(),
+                complaint.getTitle(),
                 complaint.getUserEmail(),
                 complaint.getAddress(),
                 complaint.getGeolocation(),
