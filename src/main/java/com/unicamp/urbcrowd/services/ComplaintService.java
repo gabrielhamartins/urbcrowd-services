@@ -43,6 +43,7 @@ public class ComplaintService {
         String imageHref = s3Service.uploadFile(image);
         UserInfoResponseDTO userInfo = userService.getUserInfo();
         return complaintToComplaintResponseDTO(complaintRepository.save(Complaint.builder()
+                .title(complaintRequestDTO.title())
                 .address(complaintRequestDTO.address())
                 .geolocation(complaintRequestDTO.geolocation())
                 .description(complaintRequestDTO.description())

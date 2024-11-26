@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{host}}/complaints
+  url: {{host}}/complaints-image
   body: multipartForm
   auth: bearer
 }
@@ -27,5 +27,13 @@ body:json {
 }
 
 body:multipart-form {
-  teste: @file(C:\Users\gabri\Pictures\eu2.png)
+  image: @file(C:\Users\gabri\Pictures\inception.png)
+  title: Buraco na rua
+  address.addressLine: Rua um
+  address.city: Campinas
+  address.federalState: SP
+  geolocation.latitude: 12.3
+  geolocation.longitude: 32.1
+  type: SIDEWALK
+  description: Um buraco na rua está atrapalhando todo mundo
 }
