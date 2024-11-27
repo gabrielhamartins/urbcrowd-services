@@ -1,5 +1,6 @@
 package com.unicamp.urbcrowd.controllers;
 
+import com.unicamp.urbcrowd.controllers.dto.CommentRequestDTO;
 import com.unicamp.urbcrowd.controllers.dto.ComplaintRequestDTO;
 import com.unicamp.urbcrowd.controllers.dto.ComplaintResponseDTO;
 import com.unicamp.urbcrowd.services.ComplaintService;
@@ -32,12 +33,17 @@ public class ComplaintController {
     }
 
     @GetMapping("/complaints")
-    public ResponseEntity<List<ComplaintResponseDTO>> findAll() {
+    public ResponseEntity<List<ComplaintResponseDTO>> findAll() throws AccountNotFoundException {
         return ResponseEntity.ok(complaintService.findAll());
     }
 
     @PatchMapping("/complaints/{complaintId}")
     public ResponseEntity<ComplaintResponseDTO> thumbsUp(@PathVariable String complaintId) throws AccountNotFoundException {
         return ResponseEntity.ok(complaintService.thumbsUp(complaintId));
+    }
+
+    @PostMapping("/complaints/{complaintId}/comments")
+    public ResponseEntity<ComplaintResponseDTO> comment(@PathVariable String complaintId, @RequestBody CommentRequestDTO comment) throws AccountNotFoundException {
+        return ResponseEntity.ok(complaintService.comment(complaintId, comment));
     }
 }

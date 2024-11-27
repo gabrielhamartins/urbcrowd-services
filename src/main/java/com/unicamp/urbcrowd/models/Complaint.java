@@ -40,8 +40,21 @@ public class Complaint {
     @Builder.Default
     private ComplaintStatus status = ComplaintStatus.OPEN;
     private ComplaintType type;
+
     public void thumbsUp(String userId) {
         this.thumbsUpUserIds.add(userId);
+    }
+
+    public void revertThumbsUp(String userId) {
+        this.thumbsUpUserIds.remove(userId);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public boolean userHasThumbsUp(String userId){
+        return this.thumbsUpUserIds.contains(userId);
     }
 
 }

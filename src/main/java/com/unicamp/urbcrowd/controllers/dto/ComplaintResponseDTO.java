@@ -1,6 +1,9 @@
 package com.unicamp.urbcrowd.controllers.dto;
 
-import com.unicamp.urbcrowd.models.*;
+import com.unicamp.urbcrowd.models.Address;
+import com.unicamp.urbcrowd.models.ComplaintStatus;
+import com.unicamp.urbcrowd.models.ComplaintType;
+import com.unicamp.urbcrowd.models.Geolocation;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -16,7 +19,8 @@ public record ComplaintResponseDTO(
         String description,
         ComplaintStatus status,
         ComplaintType type,
-        Set<Comment> comments,
-        int thumbsUpCount
+        Set<CommentDTO> comments,
+        int thumbsUpCount,
+        boolean userHasThumbsUp
 ) {
 }
