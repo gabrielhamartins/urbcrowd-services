@@ -29,4 +29,4 @@ jobs:
           environment_name: 'urbcrowd-dev'
           version_label: ${{ github.sha }}
           region: sa-east-1
-          deployment_package: target/urbcrowd-*.jar
+          deployment_package: ${{ env.PACKAGE_NAME }}
