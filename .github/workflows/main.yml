@@ -18,6 +18,8 @@ jobs:
           java-version: '21'
       - name: Build Project
         run: mvn clean install -DskipTests
+      - name: Find Deployment Package
+        run: echo "PACKAGE_NAME=$(ls target/*.jar)" >> $GITHUB_ENV
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
