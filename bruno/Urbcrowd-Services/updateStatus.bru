@@ -1,0 +1,21 @@
+meta {
+  name: updateStatus
+  type: http
+  seq: 11
+}
+
+patch {
+  url: {{host}}/complaints/6741495f10513257c939f4be/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "status": "SOLVED"
+  }
+}

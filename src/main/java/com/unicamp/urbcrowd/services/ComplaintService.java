@@ -6,6 +6,7 @@ import com.unicamp.urbcrowd.controllers.dto.ComplaintResponseDTO;
 import com.unicamp.urbcrowd.controllers.dto.UserInfoResponseDTO;
 import com.unicamp.urbcrowd.models.Comment;
 import com.unicamp.urbcrowd.models.Complaint;
+import com.unicamp.urbcrowd.models.ComplaintStatus;
 import com.unicamp.urbcrowd.repositories.ComplaintRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,5 +87,12 @@ public class ComplaintService {
 
     public void delete(String complaintId) {
         this.complaintRepository.deleteById(complaintId);
+    }
+
+    public ComplaintResponseDTO updateStatus(String complaintId, ComplaintStatus status) throws AccountNotFoundException {
+        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow();
+        UserInfoResponseDTO userInfo = userService.getUserInfo();
+        complaint.setStatus(status);
+        return complaintToComplaintResponseDTO(this.complaintRepository.save(complaint), userInfo.id());
     }
 }
