@@ -1,0 +1,32 @@
+meta {
+  name: postComment
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{host}}/complaints/{complaintId}/comments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "comment": "Comment"
+  }
+}
+
+body:multipart-form {
+  image: @file(C:\Users\gabri\Pictures\inception.png)
+  address.addressLine: Rua um
+  address.city: Campinas
+  address.federalState: SP
+  geolocation.latitude: 12.3
+  geolocation.longitude: 32.1
+  type: TRASH
+  description: Lixo na rua um
+}
