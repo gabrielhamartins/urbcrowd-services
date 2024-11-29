@@ -6,6 +6,7 @@ import com.unicamp.urbcrowd.controllers.dto.ComplaintResponseDTO;
 import com.unicamp.urbcrowd.services.ComplaintService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,5 +46,12 @@ public class ComplaintController {
     @PostMapping("/complaints/{complaintId}/comments")
     public ResponseEntity<ComplaintResponseDTO> comment(@PathVariable String complaintId, @RequestBody CommentRequestDTO comment) throws AccountNotFoundException {
         return ResponseEntity.ok(complaintService.comment(complaintId, comment));
+    }
+
+    @DeleteMapping("/complaints/{complaintId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteComplaint(@PathVariable String complaintId) {
+        complaintService.delete(complaintId);
+        return ResponseEntity.noContent().build();
     }
 }

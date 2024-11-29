@@ -83,4 +83,8 @@ public class ComplaintService {
                 .build());
         return complaintToComplaintResponseDTO(this.complaintRepository.save(complaint), userInfo.id());
     }
+
+    public void delete(String complaintId) {
+        this.complaintRepository.deleteById(complaintId);
+    }
 }
