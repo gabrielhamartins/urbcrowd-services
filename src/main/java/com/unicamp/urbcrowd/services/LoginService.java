@@ -37,7 +37,7 @@ public class LoginService {
         var expiresIn = 3600L;
         var roles = user.get().getRoles().stream()
                 .map(Role::getName)
-                .collect(Collectors.joining());
+                .collect(Collectors.toList());
 
         var claims = JwtClaimsSet.builder()
                 .issuer("urbcrowd")
@@ -49,6 +49,6 @@ public class LoginService {
                 .claim("email", user.get().getEmail())
                 .build();
 
-        return new LoginResponseDTO(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expiresIn);
+        return new LoginResponseDTO(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expiresIn, roles);
     }
 }
